@@ -1,10 +1,23 @@
 package com.raynaldi.practice;
 
+import com.raynaldi.practice.api.PlagiarismCheckRepository;
+import com.raynaldi.practice.api.PlagiarismCheckResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import javax.transaction.Transactional;
+
 @Service
-public record StudentService(StudentRepository studentRepository, RestTemplate restTemplate) {
+public class StudentService {
+
+    @Autowired
+    PlagiarismCheckRepository plagiarismCheckRepository;
+
+    @Autowired
+    StudentRepository studentRepository;
+
+    @Transactional
     public void registerStudent(StudentRegistrationRequest request) {
         Student student = Student.builder()
                 .firstName(request.firstName())
@@ -12,18 +25,15 @@ public record StudentService(StudentRepository studentRepository, RestTemplate r
                 .email(request.email())
                 .build();
 
-        // TODO: Validate Request
         studentRepository.saveAndFlush(student);
 
-        PlagiarismCheckResponse plagiarismCheckResponse = restTemplate.getForObject(
-                "http://PLAGIARISM/api/v1/plagiarism-check/{studentId}",
-                PlagiarismCheckResponse.class,
-                student.getId()
-        );
+        PlagiarismCheckResponse plagiarismCheckResponse = plagiarismCheckRepository.getPlagiarismCheckByStudentId(student.getId());
+
 
         if (plagiarismCheckResponse.getIsPlagiarist()) {
             throw new IllegalStateException("Student is a plagiarist!");
         }
-        // TODO: send notification
+
+        System.out.println(plagiarismCheckResponse.getIsPlagiarist());
     }
 }
