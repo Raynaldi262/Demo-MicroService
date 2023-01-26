@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
 
-@FeignClient(name = "plagiarism", url = "http://PLAGIARISM/api/v1/plagiarism-check/")
+@FeignClient(name = "PLAGIARISM/api/v1/plagiarism-check/")
 public interface PlagiarismCheckRepository {
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET, value = "/")
     List<PlagiarismCheckResponse> getAllPlagiarismCheck();
 
     @RequestMapping(method = RequestMethod.GET, value = "/{studentId}")

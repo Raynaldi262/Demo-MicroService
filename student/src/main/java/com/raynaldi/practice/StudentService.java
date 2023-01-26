@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 public class StudentService {
@@ -35,5 +36,9 @@ public class StudentService {
         }
 
         System.out.println(plagiarismCheckResponse.getIsPlagiarist());
+    }
+
+    public List<PlagiarismCheckResponse> getAllPlagiarismCheck(){
+        return plagiarismCheckRepository.getAllPlagiarismCheck();
     }
 }

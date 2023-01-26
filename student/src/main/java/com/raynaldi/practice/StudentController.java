@@ -1,11 +1,11 @@
 package com.raynaldi.practice;
 
+import com.raynaldi.practice.api.PlagiarismCheckResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -15,9 +15,17 @@ public class StudentController {
     @Autowired
     StudentService studentService;
 
-    @PostMapping
+    @PostMapping("/")
     public void registerStudent(@RequestBody StudentRegistrationRequest studentRegistrationRequest) {
         log.info("New Student Registration {}", studentRegistrationRequest);
         studentService.registerStudent(studentRegistrationRequest);
+    }
+
+    @RequestMapping( 
+            method = RequestMethod.GET)
+    public List<PlagiarismCheckResponse> allStudent() {
+        List<PlagiarismCheckResponse> plagiarisms = studentService.getAllPlagiarismCheck();
+        log.info("Succes get all = " + plagiarisms.size());
+        return plagiarisms;
     }
 }
