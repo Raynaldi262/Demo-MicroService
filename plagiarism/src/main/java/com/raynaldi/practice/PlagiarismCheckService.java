@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class PlagiarismCheckService {
     private final PlagiarismCheckHistoryRepository plagiarismCheckHistoryRepository;
 
-    public boolean isPlagiaristStudent(Long studentId) {
+    public PlagiarismCheckHistory isPlagiaristStudent(Long studentId) {
         plagiarismCheckHistoryRepository.save(
                 PlagiarismCheckHistory.builder()
                         .studentId(studentId)
@@ -18,6 +18,7 @@ public class PlagiarismCheckService {
                         .createdAt(LocalDateTime.now())
                         .build()
         );
-        return false;
+
+        return plagiarismCheckHistoryRepository.findByStudentId(studentId);
     }
 }
